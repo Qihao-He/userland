@@ -89,16 +89,16 @@ int main(int argc, char *argv[]) {
         gpu_fft_execute(fft); // call one or many times
         t[1] = Microseconds();
 
-        tsq[0]=tsq[1]=0;
-        for (j=0; j<jobs; j++) {
-            base = fft->out + j*fft->step; // output buffer
-            freq = j+1;
-            for (i=0; i<N; i++) {
-                double re = cos(2*GPU_FFT_PI*freq*i/N);
-                tsq[0] += pow(re, 2);
-                tsq[1] += pow(re - base[i].re, 2) + pow(base[i].im, 2);
-            }
-        }
+        // tsq[0]=tsq[1]=0;
+        // for (j=0; j<jobs; j++) {
+        //     base = fft->out + j*fft->step; // output buffer
+        //     freq = j+1;
+        //     for (i=0; i<N; i++) {
+        //         double re = cos(2*GPU_FFT_PI*freq*i/N);
+        //         tsq[0] += pow(re, 2);
+        //         tsq[1] += pow(re - base[i].re, 2) + pow(base[i].im, 2);
+        //     }
+        // }
 
         printf("rel_rms_err = %0.2g, usecs = %d, k = %d\n",
             sqrt(tsq[1]/tsq[0]), (t[1]-t[0])/jobs, k);
