@@ -100,8 +100,9 @@ int main(int argc, char *argv[]) {
         //     }
         // }
 
-        printf("rel_rms_err = %0.2g, usecs = %d, k = %d\n",
-            sqrt(tsq[1]/tsq[0]), (t[1]-t[0])/jobs, k);
+        // printf("rel_rms_err = %0.2g, usecs = %d, k = %d\n",
+        //     sqrt(tsq[1]/tsq[0]), (t[1]-t[0])/jobs, k);
+        printf("usecs = %d, k = %d\n", (t[1]-t[0])/jobs, k);
     }
 
     gpu_fft_release(fft); // Videocore memory lost if not freed !
