@@ -31,7 +31,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
-
 #include "mailbox.h"
 #include "gpu_fft.h"
 

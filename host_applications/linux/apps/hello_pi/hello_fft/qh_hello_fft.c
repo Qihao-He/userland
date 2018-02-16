@@ -31,15 +31,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
-
 #include "mailbox.h"
 #include "gpu_fft.h"
 
 char Usage[] =
-    "Usage: hello_fft.bin log2_N [jobs [loops]]\n"
+    "Usage: hello_fft.bin log2_N [jobs [loops [RMS_C]]]\n"
     "log2_N = log2(FFT_length),       log2_N = 8...22\n"
+    "log2_M = log2(FFT_length),       log2_M > log2_N\n"
     "jobs   = transforms per batch,   jobs>0,        default 1\n"
-    "loops  = number of test repeats, loops>0,       default 1\n";
+    "loops  = number of test repeats, loops>0,       default 1\n"
+    "RMS_C  = number of test repeats, T(1),F(0),     default 0\n";
 
 unsigned Microseconds(void) {
     struct timespec ts;
@@ -55,9 +56,11 @@ int main(int argc, char *argv[]) {
     struct GPU_FFT_COMPLEX *base;
     struct GPU_FFT *fft;
 
-    log2_N = argc>1? atoi(argv[1]) : 12; // 8 <= log2_N <= 22
-    jobs   = argc>2? atoi(argv[2]) : 1;  // transforms per batch
-    loops  = argc>3? atoi(argv[3]) : 1;  // test repetitions
+    log2_N = argc>1? atoi(argv[1]) : 8; // 8 <= log2_N <= 22
+    log2_M = argc>2? atoi(argv[2]) : log2_N +1; // 8 <= log2_N <= 22
+    jobs   = argc>3? atoi(argv[3]) : 1;  // transforms per batch
+    loops  = argc>4? atoi(argv[4]) : 1;  // test repetitions
+    RMS_C  = argc>5? atoi(argv[5]) : 0;  // RMS_controller
 
     if (argc<2 || jobs<1 || loops<1) {
         printf(Usage);
@@ -75,8 +78,10 @@ int main(int argc, char *argv[]) {
         case -5: printf("Can't open libbcm_host.\n");                                         return -1;
     }
 
+    printf("log2_N","N"，"Init_T"，"FFT_T","RMS_T"，"Total_T\n")
     for (k=0; k<loops; k++) {
 
+        t0 = Microseconds();
         for (j=0; j<jobs; j++) {
             base = fft->in + j*fft->step; // input buffer
             for (i=0; i<N; i++) base[i].re = base[i].im = 0;
@@ -85,26 +90,43 @@ int main(int argc, char *argv[]) {
         }
 
         usleep(1); // Yield to OS
-        t[0] = Microseconds();
+        t1 = Microseconds();
+        // t[0] = Microseconds();
         gpu_fft_execute(fft); // call one or many times
-        t[1] = Microseconds();
+        t2 = Microseconds();
+        // t[1] = Microseconds();
 
-        tsq[0]=tsq[1]=0;
-        for (j=0; j<jobs; j++) {
-            base = fft->out + j*fft->step; // output buffer
-            freq = j+1;
-            for (i=0; i<N; i++) {
-                double re = cos(2*GPU_FFT_PI*freq*i/N);
-                tsq[0] += pow(re, 2);
-                tsq[1] += pow(re - base[i].re, 2) + pow(base[i].im, 2);
-            }
+        if(RMS_C == 1){
+          tsq[0]=tsq[1]=0;
+          for (j=0; j<jobs; j++) {
+              base = fft->out + j*fft->step; // output buffer
+              freq = j+1;
+              for (i=0; i<N; i++) {
+                  double re = cos(2*GPU_FFT_PI*freq*i/N);
+                  tsq[0] += pow(re, 2);
+                  tsq[1] += pow(re - base[i].re, 2) + pow(base[i].im, 2);
+              }
+          }
+          t3 = Microseconds();
+          printf(%d,j + log2_N,",",N,",",t1 - t0,",",t2 - t1,",",t3 - t2,",",t3 - t0)
+          printf("rel_rms_err = %0.2g, usecs = %d, k = %d\n",
+              sqrt(tsq[1]/tsq[0]), (t[1]-t[0])/jobs, k);
+          // printf("rel_rms_err = %0.2g, usecs = %d, k = %d\n",
+          //     sqrt(tsq[1]/tsq[0]), (t[1]-t[0])/jobs, k);
         }
-
-        printf("rel_rms_err = %0.2g, usecs = %d, k = %d\n",
-            sqrt(tsq[1]/tsq[0]), (t[1]-t[0])/jobs, k);
         printf("usecs = %d, k = %d\n", (t[1]-t[0])/jobs, k);
+        // printf("usecs = %d, k = %d\n", (t[1]-t[0])/jobs, k);
+        // tsq[0]=tsq[1]=0;
+        // for (j=0; j<jobs; j++) {
+        //     base = fft->out + j*fft->step; // output buffer
+        //     freq = j+1;
+        //     for (i=0; i<N; i++) {
+        //         double re = cos(2*GPU_FFT_PI*freq*i/N);
+        //         tsq[0] += pow(re, 2);
+        //         tsq[1] += pow(re - base[i].re, 2) + pow(base[i].im, 2);
+        //     }
+        // }
     }
-
     gpu_fft_release(fft); // Videocore memory lost if not freed !
     return 0;
 }
