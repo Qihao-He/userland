@@ -43,7 +43,6 @@ Author:Qihao He
 char Usage[] =
     "Usage: hello_fft.bin log2_N [jobs [loops [RMS_C]]]\n"
     "log2_N = log2(FFT_length),       log2_N = 8...22\n"
-    // "log2_M = log2(FFT_length),       log2_M > log2_N\n"
     "jobs   = transforms per batch,   jobs>0,        default 1\n"
     "loops  = number of test repeats, loops>0,       default 1\n"
     "RMS_C  = number of test repeats, T(1),F(0),     default 0\n";
@@ -56,14 +55,13 @@ unsigned Microseconds(void) {
 
 int main(int argc, char *argv[]) {
     int i, j, k, ret, loops, freq, log2_N, jobs, N, mb = mbox_open();
-    unsigned t[2];
+    // unsigned t[2];
     double tsq[2];
 
     struct GPU_FFT_COMPLEX *base;
     struct GPU_FFT *fft;
 
     log2_N = argc>1? atoi(argv[1]) : 8; // 8 <= log2_N <= 22
-    log2_M = argc>2? atoi(argv[2]) : log2_N +1; // 8 <= log2_N <= 22
     jobs   = argc>3? atoi(argv[3]) : 1;  // transforms per batch
     loops  = argc>4? atoi(argv[4]) : 1;  // test repetitions
     RMS_C  = argc>5? atoi(argv[5]) : 0;  // RMS_controller
@@ -73,12 +71,10 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    // int span_N = log2_M - log2_N;
     double time_elapsed[loops][1][4] = {0}; //3D array
     if (RMS_C ==1) double REL_RMS_ERR[loops][1] = {0}; //2D array
     N = 1<<log2_N; // FFT length
 
-// needs to modifiy the gpu_fft_prepare for the multiple jobs execute
     ret = gpu_fft_prepare(mb, log2_N, GPU_FFT_REV, jobs, &fft); // call once
 
     switch(ret) {
@@ -89,13 +85,10 @@ int main(int argc, char *argv[]) {
         case -5: printf("Can't open libbcm_host.\n");                                         return -1;
     }
 
-    // for (i=0; i<span_N; i++) log2_FFT_length[i] = i + log2_N;
     printf("log2_N,N，Init_T，FFT_T,RMS_T，Total_T\n");
 
     for (k=0; k<loops; k++) {
-        // for(l=0; l<span_N, l++){
           t0 = Microseconds();
-          N = 1<<log2_FFT_length[l]; // FFT length
 
           for (j=0; j<jobs; j++) {
               base = fft->in + j*fft->step; // input buffer
@@ -124,9 +117,9 @@ int main(int argc, char *argv[]) {
           }
           t3 = Microseconds();
           printf("%i,%i,%f,%f,%f,%f\n",l + log2_N, N, t1 - t0,t2 - t1,t3 - t2,t3 - t0);
-          printf("usecs = %d, k = %d\n", (t[1]-t[0])/jobs, k);
+          // printf("gpu_fft_usecs = %d, k = %d\n", (t2-t1)/jobs, k);
+          // printf("usecs = %d, k = %d\n", (t[1]-t[0])/jobs, k);
           // printf("rel_rms_err = %0.2g, usecs = %d, k = %d\n",sqrt(tsq[1]/tsq[0]), (t[1]-t[0])/jobs, k);
-        // }
     }
     gpu_fft_release(fft); // Videocore memory lost if not freed !
     return 0;
