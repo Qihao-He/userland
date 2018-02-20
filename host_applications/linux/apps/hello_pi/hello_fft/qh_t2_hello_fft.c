@@ -68,6 +68,8 @@ int main(int argc, char *argv[]) {
     loops  = argc>3? atoi(argv[3]) : 1;  // test repetitions
     RMS_C  = argc>4? atoi(argv[4]) : 1;  // RMS_controller
 
+    printf("1_log2_N: %i\n", log2_N);
+
     if (!(argc>=2 && argc<=5) || jobs<1 || loops<1 || !(RMS_C>=0 && RMS_C<=1) ) {
         printf(Usage);
         return -1;
@@ -81,10 +83,11 @@ int main(int argc, char *argv[]) {
     memset(REL_RMS_ERR, 0., loops * sizeof(REL_RMS_ERR[0]));
     // }
     N = 1<<log2_N; // FFT length
+    printf("2_log2_N: %i\n", log2_N);
 
     ret = gpu_fft_prepare(mb, log2_N, GPU_FFT_REV, jobs, &fft); // call once
 
-    printf("log2_N: %i\n", log2_N);
+
     printf("ret: %i\n", ret);
 
     switch(ret) {
