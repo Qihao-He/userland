@@ -139,7 +139,7 @@ int main(int argc, char *argv[]) {
 
       printf("REL_RMS_ERR for log2_N:%d\n", log2_N);
       for (i = 0; i < loops; i++) {
-          printf("%f,",REL_RMS_ERR[i][:]);
+          printf("%f,",REL_RMS_ERR[i][0]);
       }
       printf("\n");
     }
