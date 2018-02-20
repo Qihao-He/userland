@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
 
     if(RMS_C == 1){
 
-      printf("REL_RMS_ERR:\n");
+      printf("REL_RMS_ERR for log2_%d:\n", log2_N);
       for (i = 0; i < loops; i++) {
           printf("%f,",REL_RMS_ERR[i]);
       }
