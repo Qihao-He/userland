@@ -132,10 +132,10 @@ int main(int argc, char *argv[]) {
                 }
                 REL_RMS_ERR[l][k] = sqrt(tsq[1] / tsq[0]);
             }
+            t[3] = Microseconds();
+            printf("%i,%i,%d,%d,%d,%d\n",l+log2_N,N,
+            (t[1]-t[0])/jobs,(t[2]-t[1])/jobs,(t[3]-t[2])/jobs,(t[3]-t[0])/jobs);
         }
-        t[3] = Microseconds();
-        printf("%i,%i,%d,%d,%d,%d\n",l+log2_N,N,
-        (t[1]-t[0])/jobs,(t[2]-t[1])/jobs,(t[3]-t[2])/jobs,(t[3]-t[0])/jobs);
         gpu_fft_release(fft); // Videocore memory lost if not freed !
     }
 
