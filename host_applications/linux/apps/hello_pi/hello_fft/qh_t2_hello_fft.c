@@ -76,8 +76,8 @@ int main(int argc, char *argv[]) {
     menset(time_elapsed, 0., loops * 4 * sizeof(time_elapsed[0]));
      //3D array
     // if (RMS_C ==1){
-        double REL_RMS_ERR[loops][1]; //2D array
-        menset(REL_RMS_ERR, 0., loops * sizeof(REL_RMS_ERR[0]));
+    double REL_RMS_ERR[loops][1]; //2D array
+    menset(REL_RMS_ERR, 0., loops * sizeof(REL_RMS_ERR[0]));
     // }
     N = 1<<log2_N; // FFT length
 
@@ -127,9 +127,9 @@ int main(int argc, char *argv[]) {
 
         if(RMS_C == 1){
           printf("REL_RMS_ERR:\n");
-            for (int i = 0; i < loops; i++) {
-                printf("%f,",REL_RMS_ERR[i]);
-            }
+          for (i = 0; i < loops; i++) {
+              printf("%f,",REL_RMS_ERR[i]);
+          }
         }
         // printf("gpu_fft_usecs = %d, k = %d\n", (t2-t1)/jobs, k);
         // printf("usecs = %d, k = %d\n", (t[1]-t[0])/jobs, k);
