@@ -56,7 +56,7 @@ unsigned Microseconds(void) {
 }
 
 int main(int argc, char *argv[]) {
-    int i, j, k, ret, loops, freq, log2_N, jobs, N, mb = mbox_open(), RMS_C, span_log2_N;
+    int i, j, k, l, ret, loops, freq, log2_N, log2_M, jobs, N, mb = mbox_open(), RMS_C, span_log2_N;
     int gpu_fft_prepare_flag = 1;
     unsigned t[4];
     double tsq[2];
@@ -121,23 +121,24 @@ int main(int argc, char *argv[]) {
             gpu_fft_execute(fft); // call one or many times
             t[2] = Microseconds();
 
-                tsq[0]=tsq[1]=0;
-                for (j=0; j<jobs; j++) {
-                    base = fft->out + j*fft->step; // output buffer
-                    freq = j+1;
-                    for (i=0; i<N; i++) {
-                        double re = cos(2*GPU_FFT_PI*freq*i/N);
-                        tsq[0] += pow(re, 2);
-                        tsq[1] += pow(re - base[i].re, 2) + pow(base[i].im, 2);
-                    }
-                    REL_RMS_ERR[l][k] = sqrt(tsq[1] / tsq[0]);
+            tsq[0]=tsq[1]=0;
+            for (j=0; j<jobs; j++) {
+                base = fft->out + j*fft->step; // output buffer
+                freq = j+1;
+                for (i=0; i<N; i++) {
+                    double re = cos(2*GPU_FFT_PI*freq*i/N);
+                    tsq[0] += pow(re, 2);
+                    tsq[1] += pow(re - base[i].re, 2) + pow(base[i].im, 2);
                 }
+                REL_RMS_ERR[l][k] = sqrt(tsq[1] / tsq[0]);
             }
-            t[3] = Microseconds();
-            printf("%i,%i,%d,%d,%d,%d\n",log2_N,N,
-            (t[1]-t[0])/jobs,(t[2]-t[1])/jobs,(t[3]-t[2])/jobs,(t[3]-t[0])/jobs);
         }
+        t[3] = Microseconds();
+        printf("%i,%i,%d,%d,%d,%d\n",log2_N,N,
+        (t[1]-t[0])/jobs,(t[2]-t[1])/jobs,(t[3]-t[2])/jobs,(t[3]-t[0])/jobs);
+        gpu_fft_release(fft); // Videocore memory lost if not freed !
     }
+
 
     if(RMS_C == 1){
       printf("REL_RMS_ERR for log2_N:%d\n", log2_N);
@@ -150,6 +151,6 @@ int main(int argc, char *argv[]) {
       printf("\n");
     }
 
-    gpu_fft_release(fft); // Videocore memory lost if not freed !
+    // gpu_fft_release(fft); // Videocore memory lost if not freed !
     return 0;
 }
