@@ -121,16 +121,18 @@ int main(int argc, char *argv[]) {
             gpu_fft_execute(fft); // call one or many times
             t[2] = Microseconds();
 
-            tsq[0]=tsq[1]=0;
-            for (j=0; j<jobs; j++) {
-                base = fft->out + j*fft->step; // output buffer
-                freq = j+1;
-                for (i=0; i<N; i++) {
-                    double re = cos(2*GPU_FFT_PI*freq*i/N);
-                    tsq[0] += pow(re, 2);
-                    tsq[1] += pow(re - base[i].re, 2) + pow(base[i].im, 2);
+            if(RMS_C == 1){
+                tsq[0]=tsq[1]=0;
+                for (j=0; j<jobs; j++) {
+                    base = fft->out + j*fft->step; // output buffer
+                    freq = j+1;
+                    for (i=0; i<N; i++) {
+                        double re = cos(2*GPU_FFT_PI*freq*i/N);
+                        tsq[0] += pow(re, 2);
+                        tsq[1] += pow(re - base[i].re, 2) + pow(base[i].im, 2);
+                    }
+                    REL_RMS_ERR[l][k] = sqrt(tsq[1] / tsq[0]);
                 }
-                REL_RMS_ERR[l][k] = sqrt(tsq[1] / tsq[0]);
             }
             t[3] = Microseconds();
             printf("%i,%i,%d,%d,%d,%d\n",l+log2_N,N,
@@ -141,7 +143,6 @@ int main(int argc, char *argv[]) {
 
 
     if(RMS_C == 1){
-
       for (i = 0; i < span_log2_N; i++) {
         printf("REL_RMS_ERR for log2_N:%d\n", log2_N + i);
           for (j = 0; j < loops; j++) {
