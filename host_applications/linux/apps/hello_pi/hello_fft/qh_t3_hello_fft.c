@@ -135,8 +135,7 @@ int main(int argc, char *argv[]) {
                 }
             }
             t[3] = Microseconds();
-            printf("%i,%i,%d,%d,%d,%d\n",l+log2_N,N,
-            (t[1]-t[0])/jobs,(t[2]-t[1])/jobs,(t[3]-t[2])/jobs,(t[3]-t[0])/jobs);
+            printf("%i,%i,%d,%d,%d,%d\n",log2_N+l,N,t[1]-t[0],t[2]-t[1],t[3]-t[2],t[3]-t[0]);
         }
         gpu_fft_release(fft); // Videocore memory lost if not freed !
     }
