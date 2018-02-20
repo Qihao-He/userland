@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
     log2_N = argc>1? atoi(argv[1]) : 8; // 8 <= log2_N <= 22
     jobs   = argc>2? atoi(argv[2]) : 1;  // transforms per batch
     loops  = argc>3? atoi(argv[3]) : 1;  // test repetitions
-    RMS_C  = argc>4? atoi(argv[4]) : 0;  // RMS_controller
+    RMS_C  = argc>4? atoi(argv[4]) : 1;  // RMS_controller
 
     if (!(argc>=2 && argc<=5) || jobs<1 || loops<1 || !(RMS_C>=0 && RMS_C<=1) ) {
         printf(Usage);
