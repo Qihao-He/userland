@@ -75,10 +75,10 @@ int main(int argc, char *argv[]) {
     double time_elapsed[loops][1][4]; //3D array
     menset(time_elapsed, 0., loops * 4 * sizeof(time_elapsed[0]));
      //3D array
-    if (RMS_C ==1){
+    // if (RMS_C ==1){
         double REL_RMS_ERR[loops][1]; //2D array
         menset(REL_RMS_ERR, 0., loops * sizeof(REL_RMS_ERR[0]));
-    }
+    // }
     N = 1<<log2_N; // FFT length
 
     ret = gpu_fft_prepare(mb, log2_N, GPU_FFT_REV, jobs, &fft); // call once
@@ -122,13 +122,13 @@ int main(int argc, char *argv[]) {
             }
         }
         t3 = Microseconds();
-        printf("%i,%i,%f,%f,%f,%f\n",l + log2_N, N, t1 - t0,t2 - t1,t3 - t2,t3 - t0);
+        printf("%i,%i,%f,%f,%f,%f\n", log2_N, N, t1 - t0,t2 - t1,t3 - t2,t3 - t0);
 
 
         if(RMS_C == 1){
           printf("REL_RMS_ERR:\n");
-            for(int i = 0; i < loops; i++) {
-                printf("%f,"REL_RMS_ERR[i]);
+            for (int i = 0; i < loops; i++) {
+                printf("%f,",REL_RMS_ERR[i]);
             }
         }
         // printf("gpu_fft_usecs = %d, k = %d\n", (t2-t1)/jobs, k);
