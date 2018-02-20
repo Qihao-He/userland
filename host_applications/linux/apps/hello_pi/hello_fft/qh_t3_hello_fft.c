@@ -96,11 +96,11 @@ int main(int argc, char *argv[]) {
 
     for(l=0; l<span_log2_N; l++){
         N = 1<<(log2_N + l); // FFT length
-        ret = gpu_fft_prepare(mb, log2_N, GPU_FFT_REV, jobs, &fft); // call once
+        ret = gpu_fft_prepare(mb, log2_N + l, GPU_FFT_REV, jobs, &fft); // call once
 
         switch(ret) {
             case -1: printf("Unable to enable V3D. Please check your firmware is up to date.\n"); return -1;
-            case -2: printf("log2_N=%d not supported.  Try between 8 and 22.\n", log2_N);         return -1;
+            case -2: printf("log2_N=%d not supported.  Try between 8 and 22.\n", log2_N + l);         return -1;
             case -3: printf("Out of memory.  Try a smaller batch or increase GPU memory.\n");     return -1;
             case -4: printf("Unable to map Videocore peripherals into ARM memory space.\n");      return -1;
             case -5: printf("Can't open libbcm_host.\n");                                         return -1;
