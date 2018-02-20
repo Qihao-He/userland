@@ -92,6 +92,8 @@ int main(int argc, char *argv[]) {
       }
     }
 
+    printf("log2_N,N,Init_T,FFT_T,RMS_T,Total_T\n");
+
     for(l=0; l<span_log2_N; l++){
         N = 1<<(log2_N + l); // FFT length
         ret = gpu_fft_prepare(mb, log2_N, GPU_FFT_REV, jobs, &fft); // call once
@@ -103,8 +105,6 @@ int main(int argc, char *argv[]) {
             case -4: printf("Unable to map Videocore peripherals into ARM memory space.\n");      return -1;
             case -5: printf("Can't open libbcm_host.\n");                                         return -1;
         }
-
-        printf("log2_N,N,Init_T,FFT_T,RMS_T,Total_T\n");
 
         for (k=0; k<loops; k++) {
             t[0] = Microseconds();
