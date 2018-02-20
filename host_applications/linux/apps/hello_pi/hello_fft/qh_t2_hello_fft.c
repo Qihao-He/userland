@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
     struct GPU_FFT_COMPLEX *base;
     struct GPU_FFT *fft;
 
-    log2_N = argc>1? atoi(argv[1]) : 8; // 8 <= log2_N <= 22
+    log2_N = argc>1? atoi(argv[1]) : 12; // 8 <= log2_N <= 22
     jobs   = argc>2? atoi(argv[2]) : 1;  // transforms per batch
     loops  = argc>3? atoi(argv[3]) : 1;  // test repetitions
     RMS_C  = argc>4? atoi(argv[4]) : 1;  // RMS_controller
@@ -85,6 +85,7 @@ int main(int argc, char *argv[]) {
     ret = gpu_fft_prepare(mb, log2_N, GPU_FFT_REV, jobs, &fft); // call once
 
     printf("log2_N: %i\n", log2_N);
+    printf("ret: %i\n", ret);
 
     switch(ret) {
         case -1: printf("Unable to enable V3D. Please check your firmware is up to date.\n"); return -1;
