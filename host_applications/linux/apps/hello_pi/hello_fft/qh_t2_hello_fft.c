@@ -25,12 +25,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-"""
-Created: 2/17/2018
-desciption:
-hello_fft with function of auto size and output to .csv
-Author:Qihao He
-"""
+// """
+// Created: 2/17/2018
+// desciption:
+// hello_fft with function of auto size and output to .csv
+// Author:Qihao He
+// """
 
 #include <stdlib.h>
 #include <unistd.h>
