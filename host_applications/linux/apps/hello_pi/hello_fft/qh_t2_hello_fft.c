@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
         case -5: printf("Can't open libbcm_host.\n");                                         return -1;
     }
 
-    printf("log2_N,N，Init_T，FFT_T,RMS_T，Total_T\n");
+    printf("log2_N,N,Init_T,FFT_T,RMS_T,Total_T\n");
 
     for (k=0; k<loops; k++) {
         t0 = Microseconds();
@@ -123,7 +123,7 @@ int main(int argc, char *argv[]) {
             }
         }
         t3 = Microseconds();
-        printf("%i,%i,%f,%f,%f,%f\n", log2_N, N, t1 - t0,t2 - t1,t3 - t2,t3 - t0);
+        printf("%i,%i,%f,%f,%f,%f\n",log2_N,N,t1 - t0,t2 - t1,t3 - t2,t3 - t0);
 
 
         if(RMS_C == 1){
