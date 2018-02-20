@@ -133,17 +133,17 @@ int main(int argc, char *argv[]) {
         // printf("t3:%u,\n",t[3]);
         printf("%i,%i,%d,%d,%d,%d\n",log2_N,N,
         (t[1]-t[0])/jobs,(t[2]-t[1])/jobs,(t[3]-t[2])/jobs,(t[3]-t[0])/jobs);
-
-
-        if(RMS_C == 1){
-
-          printf("REL_RMS_ERR:\n");
-          for (i = 0; i < loops; i++) {
-              printf("%f,",REL_RMS_ERR[i]);
-          }
-          printf("\n");
-        }
     }
+
+    if(RMS_C == 1){
+
+      printf("REL_RMS_ERR:\n");
+      for (i = 0; i < loops; i++) {
+          printf("%f,",REL_RMS_ERR[i]);
+      }
+      printf("\n");
+    }
+
     gpu_fft_release(fft); // Videocore memory lost if not freed !
     return 0;
 }
