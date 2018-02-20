@@ -130,6 +130,7 @@ int main(int argc, char *argv[]) {
           for (i = 0; i < loops; i++) {
               printf("%f,",REL_RMS_ERR[i]);
           }
+          printf("\n");
         }
         // printf("gpu_fft_usecs = %d, k = %d\n", (t2-t1)/jobs, k);
         // printf("usecs = %d, k = %d\n", (t[1]-t[0])/jobs, k);
