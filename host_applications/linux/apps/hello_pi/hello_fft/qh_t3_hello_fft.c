@@ -141,8 +141,9 @@ int main(int argc, char *argv[]) {
 
 
     if(RMS_C == 1){
-      printf("REL_RMS_ERR for log2_N:%d\n", log2_N);
+
       for (i = 0; i < span_log2_N; i++) {
+        printf("REL_RMS_ERR for log2_N:%d\n", log2_N + i);
           for (j = 0; j < loops; j++) {
             printf("%.8f,",REL_RMS_ERR[i][j]);
           }
