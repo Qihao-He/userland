@@ -79,13 +79,25 @@ int main(int argc, char *argv[]) {
 
     double time_elapsed[loops][1][4]; //3D array
     printf("3_log2_N: %i\n", log2_N);
-    memset(time_elapsed, 0., loops * 4 * sizeof(time_elapsed[0]));
+    for(i=0; i<loops; i++){
+      for(j=0; j<1; j++){
+        for(k=0;k<4;k++){
+          time_elapsed[i][j][k] = 0;
+        }
+      }
+    }
+    // memset(time_elapsed, 0., loops * 4 * sizeof(time_elapsed[0]));
     printf("4_log2_N: %i\n", log2_N);
      //3D array
     // if (RMS_C ==1){
     double REL_RMS_ERR[loops][1]; //2D array
     printf("5_log2_N: %i\n", log2_N);
-    memset(REL_RMS_ERR, 0., loops * sizeof(REL_RMS_ERR[0]));
+    for(i=0; i<loops; i++){
+      for(j=0; j<1; j++){
+        REL_RMS_ERR[i][j] = 0;
+      }
+    }
+    // memset(REL_RMS_ERR, 0., loops * sizeof(REL_RMS_ERR[0]));
     printf("6_log2_N: %i\n", log2_N);
     // }
     N = 1<<log2_N; // FFT length
