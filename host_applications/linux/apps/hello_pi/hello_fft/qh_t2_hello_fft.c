@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
         }
         t[3] = Microseconds();
         printf("t3:%u,\n",t[3]);
-        printf("%i,%i,%f,%f,%f,%f\n",log2_N,N,t[1]-t[0],t[2]-t[1],t[3]-t[2],t[3]-t[0]);
+        printf("%i,%i,%u,%u,%u,%u\n",log2_N,N,t[1]-t[0],t[2]-t[1],t[3]-t[2],t[3]-t[0]);
 
 
         if(RMS_C == 1){
