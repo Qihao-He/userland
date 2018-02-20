@@ -67,13 +67,18 @@ int main(int argc, char *argv[]) {
     loops  = argc>3? atoi(argv[3]) : 1;  // test repetitions
     RMS_C  = argc>4? atoi(argv[4]) : 0;  // RMS_controller
 
-    if (!(argc>=2 && argc<=5) || jobs<1 || loops<1 || !(RMS_C>=0 && RMSC<=1) ) {
+    if (!(argc>=2 && argc<=5) || jobs<1 || loops<1 || !(RMS_C>=0 && RMS_C<=1) ) {
         printf(Usage);
         return -1;
     }
 
-    double time_elapsed[loops][1][4] = {0}; //3D array
-    if (RMS_C ==1) double REL_RMS_ERR[loops][1] = {0}; //2D array
+    double time_elapsed[loops][1][4]; //3D array
+    menset(time_elapsed, 0., loops * 4 * sizeof(time_elapsed[0]));
+     //3D array
+    if (RMS_C ==1){
+        double REL_RMS_ERR[loops][1]; //2D array
+        menset(REL_RMS_ERR, 0., loops * sizeof(REL_RMS_ERR[0]));
+    }
     N = 1<<log2_N; // FFT length
 
     ret = gpu_fft_prepare(mb, log2_N, GPU_FFT_REV, jobs, &fft); // call once
