@@ -101,6 +101,7 @@ int main(int argc, char *argv[]) {
 
     for (k=0; k<loops; k++) {
         t[0] = Microseconds();
+        printf("t0:%f,\n",t[0]);
 
         for (j=0; j<jobs; j++) {
             base = fft->in + j*fft->step; // input buffer
@@ -111,8 +112,10 @@ int main(int argc, char *argv[]) {
 
         usleep(1); // Yield to OS
         t[1] = Microseconds();
+        printf("t1:%f,\n",t[1]);
         gpu_fft_execute(fft); // call one or many times
         t[2] = Microseconds();
+        printf("t2:%f,\n",t[2]);
 
         if(RMS_C == 1){
             tsq[0]=tsq[1]=0;
@@ -128,6 +131,7 @@ int main(int argc, char *argv[]) {
             }
         }
         t[3] = Microseconds();
+        printf("t3:%f,\n",t[3]);
         printf("%i,%i,%f,%f,%f,%f\n",log2_N,N,t[1]-t[0],t[2]-t[1],t[3]-t[2],t[3]-t[0]);
 
 
