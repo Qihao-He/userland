@@ -56,7 +56,8 @@ unsigned Microseconds(void) {
 }
 
 int main(int argc, char *argv[]) {
-    int i, j, k, l, ret, loops, freq, log2_N, log2_M, jobs, N, mb = mbox_open(), RMS_C, span_log2_N;
+    int i, j, k, l, ret, loops, freq, log2_N, log2_M, jobs, N, mb = mbox_open(),
+     RMS_C, span_log2_N;
     int gpu_fft_prepare_flag = 1;
     unsigned t[4];
     double tsq[2];
@@ -70,7 +71,8 @@ int main(int argc, char *argv[]) {
     loops  = argc>4? atoi(argv[4]) : 1;  // test repetitions
     RMS_C  = argc>5? atoi(argv[5]) : 1;  // RMS_controller
 
-    if (!(argc>=2 && argc<=6) || jobs<1 || loops<1 || !(RMS_C>=0 && RMS_C<=1) || log2_N >= log2_M ) {
+    if (!(argc>=2 && argc<=6) || jobs<1 || loops<1 || !(RMS_C>=0 && RMS_C<=1) ||
+    log2_N >= log2_M ) {
         printf(Usage);
         return -1;
     }
@@ -135,7 +137,8 @@ int main(int argc, char *argv[]) {
                 }
             }
             t[3] = Microseconds();
-            printf("%i,%i,%d,%d,%d,%d\n",log2_N+l,N,t[1]-t[0],t[2]-t[1],t[3]-t[2],t[3]-t[0]);
+            printf("%i,%i,%d,%d,%d,%d\n",log2_N + l,N,t[1] - t[0],t[2] - t[1],
+            t[3] - t[2],t[3] - t[0]);
         }
         gpu_fft_release(fft); // Videocore memory lost if not freed !
     }
