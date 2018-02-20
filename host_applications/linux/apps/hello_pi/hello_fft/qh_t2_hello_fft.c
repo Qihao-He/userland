@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
 
     ret = gpu_fft_prepare(mb, log2_N, GPU_FFT_REV, jobs, &fft); // call once
 
-    printf("log2_N%i:\n", log2_N);
+    printf("log2_N: %i\n", log2_N);
 
     switch(ret) {
         case -1: printf("Unable to enable V3D. Please check your firmware is up to date.\n"); return -1;
