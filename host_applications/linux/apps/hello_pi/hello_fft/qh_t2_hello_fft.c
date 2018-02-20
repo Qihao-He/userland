@@ -73,11 +73,11 @@ int main(int argc, char *argv[]) {
     }
 
     double time_elapsed[loops][1][4]; //3D array
-    menset(time_elapsed, 0., loops * 4 * sizeof(time_elapsed[0]));
+    memset(time_elapsed, 0., loops * 4 * sizeof(time_elapsed[0]));
      //3D array
     // if (RMS_C ==1){
     double REL_RMS_ERR[loops][1]; //2D array
-    menset(REL_RMS_ERR, 0., loops * sizeof(REL_RMS_ERR[0]));
+    memset(REL_RMS_ERR, 0., loops * sizeof(REL_RMS_ERR[0]));
     // }
     N = 1<<log2_N; // FFT length
 
