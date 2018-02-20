@@ -75,15 +75,21 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
+    printf("2_log2_N: %i\n", log2_N);
+
     double time_elapsed[loops][1][4]; //3D array
+    printf("3_log2_N: %i\n", log2_N);
     memset(time_elapsed, 0., loops * 4 * sizeof(time_elapsed[0]));
+    printf("4_log2_N: %i\n", log2_N);
      //3D array
     // if (RMS_C ==1){
     double REL_RMS_ERR[loops][1]; //2D array
+    printf("5_log2_N: %i\n", log2_N);
     memset(REL_RMS_ERR, 0., loops * sizeof(REL_RMS_ERR[0]));
+    printf("6_log2_N: %i\n", log2_N);
     // }
     N = 1<<log2_N; // FFT length
-    printf("2_log2_N: %i\n", log2_N);
+    printf("7_log2_N: %i\n", log2_N);
 
     ret = gpu_fft_prepare(mb, log2_N, GPU_FFT_REV, jobs, &fft); // call once
 
