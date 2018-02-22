@@ -58,7 +58,6 @@ unsigned Microseconds(void) {
 int main(int argc, char *argv[]) {
     int i, j, k, l, ret, loops, freq, log2_N, log2_M, jobs, N, mb = mbox_open(),
      RMS_C, span_log2_N;
-    int gpu_fft_prepare_flag = 1;
     unsigned t[4];
     double tsq[2];
 
