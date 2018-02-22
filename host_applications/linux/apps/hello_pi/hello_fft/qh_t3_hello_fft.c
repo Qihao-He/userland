@@ -42,7 +42,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "gpu_fft.h"
 
 char Usage[] =
-    "Usage: hello_fft.bin log2_N [jobs [loops [RMS_C]]]\n"
+    "Usage: hello_fft.bin log2_N [log2_M [jobs [loops [RMS_C]]]]\n"
     "log2_N = log2(FFT_length),       log2_N = 8...22\n"
     "log2_M = log2(FFT_length),       log2_M > log2_N\n"
     "jobs   = transforms per batch,   jobs>0,        default 1\n"
