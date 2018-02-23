@@ -53,8 +53,8 @@ unsigned Microseconds(void);
 void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR);
 void time_elapsed_init(int span_log2_N, int loops);
 void input_buffer(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int N, int jobs);
-void output_RMS(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int jobs, int span_log2_N, double **REL_RMS_ERR, int N,
-   int j, int k);
+void output_RMS(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int jobs, int span_log2_N,
+  double **REL_RMS_ERR, int N, int j, int k);
 void print_RMS(int span_log2_N, int loops, int log2_N, double **REL_RMS_ERR);
 
 int main(int argc, char *argv[]) {
