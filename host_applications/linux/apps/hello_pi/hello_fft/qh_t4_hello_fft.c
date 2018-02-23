@@ -49,20 +49,17 @@ char Usage[] =
     "loops  = number of test repeats, loops>0,       default 1\n"
     "RMS_C  = number of test repeats, T(1),F(0),     default 0\n";
 
-// not sure about the time profiling for the RPI function
 unsigned Microseconds(void);
 void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR);
 void time_elapsed_init(int span_log2_N, int loops);
 void input_buffer(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int N, int jobs);
 void output_RMS(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int jobs, int span_log2_N, double **REL_RMS_ERR, int N,
    int j, int k);
-// output REL_RMS_ERR
-   // print out REL_RMS_ERR
 void print_RMS(int span_log2_N, int loops, int log2_N, double **REL_RMS_ERR);
 
 int main(int argc, char *argv[]) {
-    int i, j, k, l, ret, loops, freq, log2_N, log2_M, jobs, N, mb = mbox_open(),
-     RMS_C, span_log2_N;
+    int i, j, k, l, ret, loops, freq, log2_N, log2_M, log2_P, jobs, N,
+    mb = mbox_open(), RMS_C, span_log2_N;
     double **REL_RMS_ERR;
     unsigned t[4];
     double tsq[2];
@@ -84,16 +81,13 @@ int main(int argc, char *argv[]) {
 
     span_log2_N =log2_M - log2_N;
     REL_RMS_ERR=(double**)malloc(span_log2_N*sizeof(double *));
-    if(REL_RMS_ERR==NULL)
-    {
+    if(REL_RMS_ERR==NULL){
       printf("Malloc failed\n");
       exit(-1);
     }
-    for (i=0;i<span_log2_N;i++)
-    {
+    for (i=0;i<span_log2_N;i++){
           REL_RMS_ERR[i]=(double *)malloc(loops*sizeof(double));
-          if(REL_RMS_ERR[i]==NULL)
-          {
+          if(REL_RMS_ERR[i]==NULL){
              printf("Malloc failed on loop %d",i);
              exit(-1);
           }
