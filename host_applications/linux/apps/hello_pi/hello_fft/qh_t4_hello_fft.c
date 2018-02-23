@@ -79,15 +79,15 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    span_log2_N =log2_M - log2_N;
-    REL_RMS_ERR=(double**)malloc(span_log2_N*sizeof(double *));
+    span_log2_N = log2_M - log2_N;
+    REL_RMS_ERR = (double **)malloc(span_log2_N * sizeof(double *));
     if(REL_RMS_ERR==NULL){
       printf("Malloc failed\n");
       exit(-1);
     }
     for (i=0;i<span_log2_N;i++){
-          REL_RMS_ERR[i]=(double *)malloc(loops*sizeof(double));
-          if(REL_RMS_ERR[i]==NULL){
+          REL_RMS_ERR[i] = (double *)malloc(loops * sizeof(double));
+          if(REL_RMS_ERR[i] == NULL){
              printf("Malloc failed on loop %d",i);
              exit(-1);
           }
@@ -136,13 +136,13 @@ int main(int argc, char *argv[]) {
 unsigned Microseconds(void) {
     struct timespec ts;
     clock_gettime(CLOCK_REALTIME, &ts);
-    return ts.tv_sec*1000000 + ts.tv_nsec/1000;
+    return ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
 }
 
 void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR){
     int i, j;
-    for(i=0; i<span_log2_N; i++){
-        for(j=0; j<loops; j++){
+    for(i = 0; i < span_log2_N; i++){
+        for(j = 0; j < loops; j++){
             REL_RMS_ERR[i][j] = 0;
         }
     }
@@ -151,9 +151,9 @@ void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR){
 void time_elapsed_init(int span_log2_N, int loops){
     int i,j,k;
     double time_elapsed[span_log2_N][loops][4]; //3D array
-    for(i=0; i<span_log2_N; i++){
-        for(j=0; j<loops; j++){
-            for(k=0; k<4; k++){
+    for(i = 0; i < span_log2_N; i++){
+        for(j = 0; j < loops; j++){
+            for(k = 0; k < 4; k++){
                 time_elapsed[i][j][k] = 0;
             }
         }
@@ -166,11 +166,11 @@ void input_buffer(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int N, int jobs){
     struct GPU_FFT_COMPLEX *base;
     struct GPU_FFT *fft;
 
-    for (j=0; j<jobs; j++) {
-        base = fft->in + j*fft->step; // input buffer
-        for (i=0; i<N; i++) base[i].re = base[i].im = 0;
+    for (j = 0; j < jobs; j++) {
+        base = fft->in + j * fft->step;
+        for (i = 0; i < N; i++) base[i].re = base[i].im = 0;
         freq = j+1;
-        base[freq].re = base[N-freq].re = 0.5;
+        base[freq].re = base[N - freq].re = 0.5;
     }
 }
 // output REL_RMS_ERR
@@ -185,7 +185,7 @@ void output_RMS(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int jobs, int span_log2_N,
     tsq[0] = tsq[1] = 0;
     a = 2 * GPU_FFT_PI / N;
     for (j=0; j<jobs; j++) {
-        base = fft->out + j*fft->step; // output buffer
+        base = fft->out + j * fft->step;
         freq = j + 1;
         b = freq * a;
         for (i=0; i<N; i++) {
