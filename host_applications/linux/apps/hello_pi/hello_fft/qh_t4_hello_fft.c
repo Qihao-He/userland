@@ -49,11 +49,14 @@ char Usage[] =
     "loops  = number of test repeats, loops>0,       default 1\n"
     "RMS_C  = number of test repeats, T(1),F(0),     default 0\n";
 
+struct GPU_FFT_COMPLEX *base;
+struct GPU_FFT *fft;
+
 unsigned Microseconds(void);
 void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR);
 void time_elapsed_init(int span_log2_N, int loops);
-void input_buffer(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int N, int jobs);
-void output_RMS(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int jobs, int span_log2_N,
+void input_buffer(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int N, int jobs);
+void output_RMS(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int jobs, int span_log2_N,
   double **REL_RMS_ERR, int N, int j, int k);
 void print_RMS(int span_log2_N, int loops, int log2_N, double **REL_RMS_ERR);
 
@@ -160,7 +163,7 @@ void time_elapsed_init(int span_log2_N, int loops){
     }
 }
 // input buffer
-void input_buffer(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int N, int jobs){
+void input_buffer(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int N, int jobs){
     int i,j;
 
     struct GPU_FFT_COMPLEX *base;
@@ -174,7 +177,7 @@ void input_buffer(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int N, int jobs){
     }
 }
 // output REL_RMS_ERR
-void output_RMS(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int jobs, int span_log2_N,
+void output_RMS(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int jobs, int span_log2_N,
   double **REL_RMS_ERR, int N, int l, int k){
     int i,j;
     double tsq[2], a, b;
