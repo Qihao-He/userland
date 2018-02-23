@@ -54,10 +54,10 @@ unsigned Microseconds(void)
 unsigned Microseconds(void);
 void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR);
 void time_elapsed_init(int span_log2_N, int loops);
-void input_buffer(fftw_complex* in, int N); // input buffer
-// output REL_RMS_ERR
-void output_RMS(fftw_complex *out, int span_log2_N, double **REL_RMS_ERR, int N,
+void input_buffer(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int N, int jobs);
+void output_RMS(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int jobs, int span_log2_N, double **REL_RMS_ERR, int N,
    int j, int k);
+// output REL_RMS_ERR
    // print out REL_RMS_ERR
 void print_RMS(int span_log2_N, int loops, int log2_N, double **REL_RMS_ERR);
 
@@ -121,14 +121,14 @@ int main(int argc, char *argv[]) {
 
         for (k=0; k<loops; k++) {
             t[0] = Microseconds();
-            input_buffer(fft, N, jobs);
+            input_buffer(fft， base, N, jobs);
 
             usleep(1); // Yield to OS
             t[1] = Microseconds();
             gpu_fft_execute(fft); // call one or many times
             t[2] = Microseconds();
 
-            output_RMS(fft, span_log2_N, REL_RMS_ERR, N, l, k);
+            output_RMS(fft, base, jobs, span_log2_N, REL_RMS_ERR, N, l, k);
 
             t[3] = Microseconds();
             printf("%i,%i,%d,%d,%d,%d\n",log2_P,N,t[1] - t[0],t[2] - t[1],
@@ -167,7 +167,7 @@ void time_elapsed_init(int span_log2_N, int loops){
     }
 }
 // input buffer
-void input_buffer(GPU_FFT *fft, int N, int jobs){
+void input_buffer(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int N, int jobs){
     int i,j;
     for (j=0; j<jobs; j++) {
         base = fft->in + j*fft->step; // input buffer
@@ -177,32 +177,22 @@ void input_buffer(GPU_FFT *fft, int N, int jobs){
     }
 }
 // output REL_RMS_ERR
-void output_RMS(fftw_complex *out, int span_log2_N, double **REL_RMS_ERR, int N,
-   int j, int k){
-    int i;
-    double tsq[2], a;
-    tsq[0]=tsq[1]=0;
-    a = 2 * M_PI / N;
-    for (i=0; i<N; i++) {
-        double re = cos(a * i);
-        tsq[0] += pow(re, 2);
-        tsq[1] += pow(re - out[i][REAL], 2) + pow(out[i][IMAG], 2);
-    }
-    REL_RMS_ERR[j][k] = sqrt(tsq[1] / tsq[0]);
-
-    /* real solution*/
-    if(RMS_C == 1){
-        tsq[0]=tsq[1]=0;
-        for (j=0; j<jobs; j++) {
-            base = fft->out + j*fft->step; // output buffer
-            freq = j+1;
-            for (i=0; i<N; i++) {
-                double re = cos(2*GPU_FFT_PI*freq*i/N);
-                tsq[0] += pow(re, 2);
-                tsq[1] += pow(re - base[i].re, 2) + pow(base[i].im, 2);
-            }
-            REL_RMS_ERR[l][k] = sqrt(tsq[1] / tsq[0]);
+void output_RMS(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int jobs, int span_log2_N,
+  double **REL_RMS_ERR, int N, int l, int k){
+    int i,j;
+    double tsq[2], a, b;
+    tsq[0] = tsq[1] = 0;
+    a = 2 * GPU_FFT_PI / N;
+    for (j=0; j<jobs; j++) {
+        base = fft->out + j*fft->step; // output buffer
+        freq = j + 1;
+        b = freq * a;
+        for (i=0; i<N; i++) {
+            double re = cos(b * i);
+            tsq[0] += pow(re, 2);
+            tsq[1] += pow(re - base[i].re, 2) + pow(base[i].im, 2);
         }
+        REL_RMS_ERR[l][k] = sqrt(tsq[1] / tsq[0]);
     }
 
 }
