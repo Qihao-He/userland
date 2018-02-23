@@ -49,7 +49,6 @@ char Usage[] =
     "loops  = number of test repeats, loops>0,       default 1\n"
     "RMS_C  = number of test repeats, T(1),F(0),     default 0\n";
 
-unsigned Microseconds(void)
 // not sure about the time profiling for the RPI function
 unsigned Microseconds(void);
 void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR);
