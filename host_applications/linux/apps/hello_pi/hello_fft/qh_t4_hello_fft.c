@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
 
         for (k=0; k<loops; k++) {
             t[0] = Microseconds();
-            input_buffer(fft， base, N, jobs);
+            input_buffer(fft, base, N, jobs);
 
             usleep(1); // Yield to OS
             t[1] = Microseconds();
