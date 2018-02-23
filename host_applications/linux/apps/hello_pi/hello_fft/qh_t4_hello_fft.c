@@ -61,7 +61,7 @@ void output_RMS(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int jobs, int
 void print_RMS(int span_log2_N, int loops, int log2_N, double **REL_RMS_ERR);
 
 int main(int argc, char *argv[]) {
-    int i, j, k, l, ret, loops, freq, log2_N, log2_M, log2_P, jobs, N,
+    int i, j, k, l, ret, loops, log2_N, log2_M, log2_P, jobs, N,
     mb = mbox_open(), RMS_C, span_log2_N;
     double **REL_RMS_ERR;
     unsigned t[4];
@@ -164,11 +164,7 @@ void time_elapsed_init(int span_log2_N, int loops){
 }
 // input buffer
 void input_buffer(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int N, int jobs){
-    int i,j;
-
-  //  struct GPU_FFT_COMPLEX *base;
-  //  struct GPU_FFT *fft;
-
+  int i, j, freq;
     for (j = 0; j < jobs; j++) {
         base = fft->in + j * fft->step;
         for (i = 0; i < N; i++) base[i].re = base[i].im = 0;
@@ -179,12 +175,8 @@ void input_buffer(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int N, int 
 // output REL_RMS_ERR
 void output_RMS(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int jobs, int span_log2_N,
   double **REL_RMS_ERR, int N, int l, int k){
-    int i,j;
+    int i, j, freq;
     double tsq[2], a, b;
-
-    //struct GPU_FFT_COMPLEX *base;
-    //struct GPU_FFT *fft;
-
     tsq[0] = tsq[1] = 0;
     a = 2 * GPU_FFT_PI / N;
     for (j = 0; j < jobs; j++) {
