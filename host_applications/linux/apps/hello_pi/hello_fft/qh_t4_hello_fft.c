@@ -67,8 +67,8 @@ int main(int argc, char *argv[]) {
     unsigned t[4];
     double tsq[2];
 
-    struct GPU_FFT_COMPLEX *base;
-    struct GPU_FFT *fft;
+    // struct GPU_FFT_COMPLEX *base;
+    // struct GPU_FFT *fft;
 
     log2_N = argc>1? atoi(argv[1]) : 12; // 8 <= log2_N <= 22
     log2_M = argc>2? atoi(argv[2]) : log2_N + 1; // 8 <= log2_N <= 22
