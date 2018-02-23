@@ -73,19 +73,19 @@ int main(int argc, char *argv[]) {
     loops  = argc>4? atoi(argv[4]) : 1;  // test repetitions
     RMS_C  = argc>5? atoi(argv[5]) : 1;  // RMS_controller
 
-    if (!(argc>=2 && argc<=6) || jobs<1 || loops<1 || !(RMS_C>=0 && RMS_C<=1) ||
-    log2_N >= log2_M ) {
+    if (!(argc >=2 && argc <= 6) || jobs < 1 || loops < 1 ||
+    !(RMS_C >= 0 && RMS_C <=1 ) || log2_N >= log2_M ){
         printf(Usage);
         return -1;
     }
 
     span_log2_N = log2_M - log2_N;
     REL_RMS_ERR = (double **)malloc(span_log2_N * sizeof(double *));
-    if(REL_RMS_ERR==NULL){
+    if(REL_RMS_ERR == NULL){
       printf("Malloc failed\n");
       exit(-1);
     }
-    for (i=0;i<span_log2_N;i++){
+    for (i = 0; i < span_log2_N; i++){
           REL_RMS_ERR[i] = (double *)malloc(loops * sizeof(double));
           if(REL_RMS_ERR[i] == NULL){
              printf("Malloc failed on loop %d",i);
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
 // print out lables for .csv file
     printf("log2_N,N,Init_T,FFT_T,RMS_T,Total_T\n");
 
-    for(l=0; l<span_log2_N; l++){
+    for(l = 0; l < span_log2_N; l++){
         log2_P = log2_N + l;
         N = 1<<log2_P; // FFT length
         ret = gpu_fft_prepare(mb, log2_P, GPU_FFT_REV, jobs, &fft); // call once
@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
             case -5: printf("Can't open libbcm_host.\n");                                         return -1;
         }
 
-        for (k=0; k<loops; k++) {
+        for (k = 0; k < loops; k++) {
             t[0] = Microseconds();
             input_buffer(fft, base, N, jobs);
 
@@ -184,11 +184,11 @@ void output_RMS(GPU_FFT *fft, GPU_FFT_COMPLEX *base, int jobs, int span_log2_N,
 
     tsq[0] = tsq[1] = 0;
     a = 2 * GPU_FFT_PI / N;
-    for (j=0; j<jobs; j++) {
+    for (j = 0; j < jobs; j++) {
         base = fft->out + j * fft->step;
         freq = j + 1;
         b = freq * a;
-        for (i=0; i<N; i++) {
+        for (i = 0; i < N; i++) {
             double re = cos(b * i);
             tsq[0] += pow(re, 2);
             tsq[1] += pow(re - base[i].re, 2) + pow(base[i].im, 2);
