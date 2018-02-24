@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
         }
         gpu_fft_release(fft); // Videocore memory lost if not freed !
     }
-    print_RMS(span_log2_N, loops, log2_N, REL_RMS_ERR);
+    if (RMS_C ==1) print_RMS(span_log2_N, loops, log2_N, REL_RMS_ERR);
     return 0;
 }
 
