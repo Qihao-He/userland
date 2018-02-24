@@ -124,7 +124,9 @@ int main(int argc, char *argv[]) {
             gpu_fft_execute(fft); // call one or many times
             t[2] = Microseconds();
 
-            output_RMS(fft, base, jobs, span_log2_N, REL_RMS_ERR, N, l, k);
+            if (RMS_C ==1){
+              output_RMS(fft, base, jobs, span_log2_N, REL_RMS_ERR, N, l, k);
+            }
 
             t[3] = Microseconds();
             printf("%i,%i,%d,%d,%d,%d\n",log2_P,N,t[1] - t[0],t[2] - t[1],
