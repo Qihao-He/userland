@@ -107,12 +107,12 @@ int main(int argc, char *argv[]) {
         fwrite(&bih, sizeof(bih), 1, fp);
 
         // Prepare 1st FFT pass
-        ret = gpu_fft_prepare(mb, log2_N, GPU_FFT_REV, N, fft_pass+0);
+        ret = gpu_fft_prepare(mb, log2_P, GPU_FFT_REV, N, fft_pass+0);
         if (ret) {
             return ret;
         }
         // Prepare 2nd FFT pass
-        ret = gpu_fft_prepare(mb, log2_N, GPU_FFT_REV, N, fft_pass+1);
+        ret = gpu_fft_prepare(mb, log2_P, GPU_FFT_REV, N, fft_pass+1);
         if (ret) {
             gpu_fft_release(fft_pass[0]);
             return ret;
@@ -125,45 +125,43 @@ int main(int argc, char *argv[]) {
             return ret;
         }
 
-        // Clear input array
-        for (y=0; y<N; y++) {
-            row = GPU_FFT_ROW(fft_pass[0], in, y);
-            for (x=0; x<N; x++) row[x].re = row[x].im = 0;
-        }
-
-        // Setup input data
-        GPU_FFT_ROW(fft_pass[0], in,   2)[  2].re = 60;
-        GPU_FFT_ROW(fft_pass[0], in, N-2)[N-2].re = 60;
-
-        // ==> FFT() ==> T() ==> FFT() ==>
-        usleep(1); /* yield to OS */   t[0] = Microseconds();
-        gpu_fft_execute(fft_pass[0]);  t[1] = Microseconds();
-        gpu_fft_trans_execute(trans);  t[2] = Microseconds();
-        gpu_fft_execute(fft_pass[1]);  t[3] = Microseconds();
-
-        // Write output to bmp file
-        for (y=0; y<N; y++) {
-            row = GPU_FFT_ROW(fft_pass[1], out, y);
-            for (x=0; x<N; x++) {
-                fputc(128+row[x].re, fp); // blue
-                fputc(128+row[x].re, fp); // green
-                fputc(128+row[x].re, fp); // red
+        for (k = 0; k < loops; k++) {
+            // Clear input array
+            for (y=0; y<N; y++) {
+                row = GPU_FFT_ROW(fft_pass[0], in, y);
+                for (x=0; x<N; x++) row[x].re = row[x].im = 0;
             }
+
+            // Setup input data
+            GPU_FFT_ROW(fft_pass[0], in,   2)[  2].re = 60;
+            GPU_FFT_ROW(fft_pass[0], in, N-2)[N-2].re = 60;
+
+            // ==> FFT() ==> T() ==> FFT() ==>
+            usleep(1); /* yield to OS */   t[0] = Microseconds();
+            gpu_fft_execute(fft_pass[0]);  t[1] = Microseconds();
+            gpu_fft_trans_execute(trans);  t[2] = Microseconds();
+            gpu_fft_execute(fft_pass[1]);  t[3] = Microseconds();
+
+            // Write output to bmp file
+            for (y=0; y<N; y++) {
+                row = GPU_FFT_ROW(fft_pass[1], out, y);
+                for (x=0; x<N; x++) {
+                    fputc(128+row[x].re, fp); // blue
+                    fputc(128+row[x].re, fp); // green
+                    fputc(128+row[x].re, fp); // red
+                }
+            }
+
+            printf( "1st FFT   %6d usecs\n"
+                    "Transpose %6d usecs\n"
+                    "2nd FFT   %6d usecs\n",
+                    t[3]-t[2], t[2]-t[1], t[1]-t[0]);
         }
-
-        printf( "1st FFT   %6d usecs\n"
-                "Transpose %6d usecs\n"
-                "2nd FFT   %6d usecs\n",
-                t[3]-t[2], t[2]-t[1], t[1]-t[0]);
-
         // Clean-up properly.  Videocore memory lost if not freed !
         gpu_fft_release(fft_pass[0]);
         gpu_fft_release(fft_pass[1]);
         gpu_fft_trans_release(trans);
     }
-
-
-
     return 0;
 }
 
