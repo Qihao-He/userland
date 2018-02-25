@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
     span_log2_N = log2_M - log2_N;
     time_elapsed_init(span_log2_N, loops);
     // print out lables for .csv file
-    printf("log2_N,N,Init_T,FFT_T,RMS_T,Total_T\n");
+    printf("log2_N,N,1st FFT_T,Transpose_T,2nd FFT_T\n");
 
     for(l = 0; l < span_log2_N; l++){
         log2_P = log2_N + l;
@@ -153,10 +153,8 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            printf( "1st FFT   %6d usecs\n"
-                    "Transpose %6d usecs\n"
-                    "2nd FFT   %6d usecs\n",
-                    t[3]-t[2], t[2]-t[1], t[1]-t[0]);
+            printf( "%i,%i,%d,%d,%d",
+            log2_P, N, t[3] - t[2], t[2] - t[1], t[1] - t[0]);
         }
         // Clean-up properly.  Videocore memory lost if not freed !
         gpu_fft_release(fft_pass[0]);
