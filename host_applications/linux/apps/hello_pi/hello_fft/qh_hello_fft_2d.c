@@ -170,3 +170,15 @@ unsigned Microseconds(void) {
     clock_gettime(CLOCK_REALTIME, &ts);
     return ts.tv_sec*1000000 + ts.tv_nsec/1000;
 }
+
+void time_elapsed_init(int span_log2_N, int loops){
+    int i,j,k;
+    double time_elapsed[span_log2_N][loops][4]; //3D array
+    for(i = 0; i < span_log2_N; i++){
+        for(j = 0; j < loops; j++){
+            for(k = 0; k < 4; k++){
+                time_elapsed[i][j][k] = 0;
+            }
+        }
+    }
+}
