@@ -153,7 +153,7 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            printf( "%i,%i,%d,%d,%d", log2_P, N, t[3] - t[2], t[2] - t[1],
+            printf( "%i,%i,%d,%d,%d\n", log2_P, N, t[3] - t[2], t[2] - t[1],
             t[1] - t[0]);
         }
         // Clean-up properly.  Videocore memory lost if not freed !
