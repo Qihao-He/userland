@@ -153,8 +153,8 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            printf( "%i,%i,%d,%d,%d",
-            log2_P, N, t[3] - t[2], t[2] - t[1], t[1] - t[0]);
+            printf( "%i,%i,%d,%d,%d", log2_P, N, t[3] - t[2], t[2] - t[1],
+            t[1] - t[0]);
         }
         // Clean-up properly.  Videocore memory lost if not freed !
         gpu_fft_release(fft_pass[0]);
