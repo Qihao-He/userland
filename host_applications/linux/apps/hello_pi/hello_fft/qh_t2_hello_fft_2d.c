@@ -145,18 +145,17 @@ int main(int argc, char *argv[]) {
 
             printf( "%i,%i,%d,%d,%d\n", log2_P, N, t[3] - t[2], t[2] - t[1],
             t[1] - t[0]);
-
-            // Write output to bmp file
-            for (y=0; y<N; y++) {
-                row = GPU_FFT_ROW(fft_pass[1], out, y);
-                for (x=0; x<N; x++) {
-                    fputc(128+row[x].re, fp); // blue
-                    fputc(128+row[x].re, fp); // green
-                    fputc(128+row[x].re, fp); // red
-                }
-            }
-            // clear bmp file
         }
+        // Write output to bmp file
+        for (y=0; y<N; y++) {
+            row = GPU_FFT_ROW(fft_pass[1], out, y);
+            for (x=0; x<N; x++) {
+                fputc(128+row[x].re, fp); // blue
+                fputc(128+row[x].re, fp); // green
+                fputc(128+row[x].re, fp); // red
+            }
+        }
+        // clear bmp file
         // Clean-up properly.  Videocore memory lost if not freed !
         gpu_fft_release(fft_pass[0]);
         gpu_fft_release(fft_pass[1]);
