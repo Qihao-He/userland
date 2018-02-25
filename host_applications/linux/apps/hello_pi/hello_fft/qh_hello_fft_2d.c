@@ -66,12 +66,22 @@ int main(int argc, char *argv[]) {
     struct GPU_FFT *fft_pass[2];
 
     log2_N = argc>1? atoi(argv[1]) : 12; // 8 <= log2_N <= 22
-    N = 1<<log2_N;
+    // log2_M = argc>2? atoi(argv[2]) : log2_N + 1; // 8 <= log2_N <= 22
+    // loops  = argc>4? atoi(argv[4]) : 1;  // test repetitions
+    // RMS_C  = argc>5? atoi(argv[5]) : 1;  // RMS_controller
+    //
+    // if (!(argc >=2 && argc <= 6) || jobs < 1 || loops < 1 ||
+    // !(RMS_C >= 0 && RMS_C <=1 ) || log2_N >= log2_M ){
+    //     printf(Usage);
+    //     return -1;
+    // }
 
     if (argc<2) {
         printf(Usage);
         return -1;
     }
+
+    N = 1<<log2_N;
 
     BITMAPFILEHEADER bfh;
     BITMAPINFOHEADER bih;
