@@ -52,6 +52,7 @@ char Usage[] =
     // "RMS_C  = number of test repeats, T(1),F(0),     default 0\n";
 
 unsigned Microseconds(void);
+void time_elapsed_init(int span_log2_N, int loops);
 
 int main(int argc, char *argv[]) {
     int x, y, l, k, ret, mb = mbox_open(), log2_N, log2_M, log2_P, span_log2_N,
