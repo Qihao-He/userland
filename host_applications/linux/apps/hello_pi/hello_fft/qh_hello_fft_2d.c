@@ -46,11 +46,10 @@ Author:Qihao He
 
 char Usage[] =
     "Usage: hello_fft.bin log2_N [jobs [loops [RMS_C]]]\n"
-    "log2_N = log2(FFT_length),       log2_N = 8...11\n"
-    "log2_M = log2(FFT_length),       log2_M > log2_N\n"
-    "jobs   = transforms per batch,   jobs>0,        default 1\n"
-    "loops  = number of test repeats, loops>0,       default 1\n"
-    "RMS_C  = number of test repeats, T(1),F(0),     default 0\n";
+    "log2_N = log2(FFT_length),       log2_N = 8...11\n";
+    // "log2_M = log2(FFT_length),       log2_M > log2_N\n"
+    // "loops  = number of test repeats, loops>0,       default 1\n"
+    // "RMS_C  = number of test repeats, T(1),F(0),     default 0\n";
 
 unsigned Microseconds(void) {
     struct timespec ts;
