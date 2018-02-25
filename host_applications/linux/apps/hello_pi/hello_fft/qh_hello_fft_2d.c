@@ -25,6 +25,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+/*
+Created: 2/24/2018
+desciption:
+hello_fft with function of auto size and output to .csv
+Author:Qihao He
+*/
 
 #include <string.h>
 #include <stdio.h>
@@ -33,8 +39,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "gpu_fft_trans.h"
 #include "hello_fft_2d_bitmap.h"
 
-#define log2_N 9
-#define N (1<<log2_N)
+// #define log2_N 9
+// #define N (1<<log2_N)
 
 #define GPU_FFT_ROW(fft, io, y) ((fft)->io+(fft)->step*(y))
 
@@ -45,12 +51,15 @@ unsigned Microseconds(void) {
 }
 
 int main(int argc, char *argv[]) {
-    int x, y, ret, mb = mbox_open();
+    int x, y, ret, mb = mbox_open(), log2_N, N;
     unsigned t[4];
 
     struct GPU_FFT_COMPLEX *row;
     struct GPU_FFT_TRANS *trans;
     struct GPU_FFT *fft_pass[2];
+
+    log2_N = argc>1? atoi(argv[1]) : 12; // 8 <= log2_N <= 22
+    N = 1<<log2_N;
 
     BITMAPFILEHEADER bfh;
     BITMAPINFOHEADER bih;
