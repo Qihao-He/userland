@@ -54,8 +54,8 @@ char Usage[] =
 unsigned Microseconds(void);
 
 int main(int argc, char *argv[]) {
-    int x, y, ret, mb = mbox_open(), log2_N, log2_M, log2_P, span_log2_N, loops,
-     N;
+    int x, y, l, k, ret, mb = mbox_open(), log2_N, log2_M, log2_P, span_log2_N,
+     loops, N;
     unsigned t[4];
 
     struct GPU_FFT_COMPLEX *row;
