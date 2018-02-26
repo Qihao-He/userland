@@ -68,8 +68,8 @@ int main(int argc, char *argv[]) {
     loops  = argc>3? atoi(argv[3]) : 1;  // test repetitions
     // RMS_C  = argc>5? atoi(argv[4]) : 1;  // RMS_controller
     //
-    if (!(argc >=2 && argc <= 4) || loops < 1 || log2_N >= log2_M ||
-    !(log2_N >= 8 && log2_N <= 11 && log2_M <= 12)){
+    if (!(argc >=2 && argc <= 4) || loops < 1 || log2_N >= log2_M {
+    // || !(log2_N >= 8 && log2_N <= 11 && log2_M <= 12)){
         printf(Usage);
         return -1;
     }
