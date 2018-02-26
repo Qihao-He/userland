@@ -51,8 +51,8 @@ char Usage[] =
 
 unsigned Microseconds(void);
 void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR);
-void output_RMS(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int jobs, int span_log2_N,
-  double **REL_RMS_ERR, int N, int j, int k);
+void output_RMS(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base,
+  int span_log2_N, double **REL_RMS_ERR, int N, int j, int k);
 void print_RMS(int span_log2_N, int loops, int log2_N, double **REL_RMS_ERR);
 // void time_elapsed_init(int span_log2_N, int loops);
 
@@ -92,7 +92,6 @@ int main(int argc, char *argv[]) {
              exit(-1);
           }
     }
-
     // initializing 2D, 3D array to 0
     REL_RMS_ERR_init(span_log2_N, loops, (double **)REL_RMS_ERR);
     // time_elapsed_init(span_log2_N, loops);
@@ -103,29 +102,31 @@ int main(int argc, char *argv[]) {
         log2_P = log2_N + l;
         N = 1 << log2_P; // FFT length
 
-        BITMAPFILEHEADER bfh;
-        BITMAPINFOHEADER bih;
+        if (BMP_C == 1){
+            BITMAPFILEHEADER bfh;
+            BITMAPINFOHEADER bih;
 
-        // Create Windows bitmap file
-        FILE *fp = fopen("hello_fft_2d.bmp", "wb");
-        if (!fp) return -666;
+            // Create Windows bitmap file
+            FILE *fp = fopen("hello_fft_2d.bmp", "wb");
+            if (!fp) return -666;
 
-        // Write bitmap header
-        memset(&bfh, 0, sizeof(bfh));
-        bfh.bfType = 0x4D42; //"BM"
-        bfh.bfSize = N*N*3;
-        bfh.bfOffBits = sizeof(bfh) + sizeof(bih);
-        fwrite(&bfh, sizeof(bfh), 1, fp);
+            // Write bitmap header
+            memset(&bfh, 0, sizeof(bfh));
+            bfh.bfType = 0x4D42; //"BM"
+            bfh.bfSize = N*N*3;
+            bfh.bfOffBits = sizeof(bfh) + sizeof(bih);
+            fwrite(&bfh, sizeof(bfh), 1, fp);
 
-        // Write bitmap info
-        memset(&bih, 0, sizeof(bih));
-        bih.biSize = sizeof(bih);
-        bih.biWidth = N;
-        bih.biHeight = N;
-        bih.biPlanes = 1;
-        bih.biBitCount = 24;
-        bih.biCompression = BI_RGB;
-        fwrite(&bih, sizeof(bih), 1, fp);
+            // Write bitmap info
+            memset(&bih, 0, sizeof(bih));
+            bih.biSize = sizeof(bih);
+            bih.biWidth = N;
+            bih.biHeight = N;
+            bih.biPlanes = 1;
+            bih.biBitCount = 24;
+            bih.biCompression = BI_RGB;
+            fwrite(&bih, sizeof(bih), 1, fp);
+        }
 
         // Prepare 1st FFT pass
         ret = gpu_fft_prepare(mb, log2_P, GPU_FFT_REV, N, fft_pass+0);
