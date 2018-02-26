@@ -149,9 +149,10 @@ int main(int argc, char *argv[]) {
         for (y=0; y<N; y++) {
             row = GPU_FFT_ROW(fft_pass[1], out, y);
             for (x=0; x<N; x++) {
-                fputc(128+row[x].re, fp); // blue
-                fputc(128+row[x].re, fp); // green
-                fputc(128+row[x].re, fp); // red
+                //fputc(128+row[x].re, fp); // blue
+                //fputc(128+row[x].re, fp); // green
+                //fputc(128+row[x].re, fp); // red
+                printf("value is %lf + j%lf",row[x].re,row[x].im);
             }
         }
         // Clean-up properly.  Videocore memory lost if not freed !
