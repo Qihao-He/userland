@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
                 //fputc(128+row[x].re, fp); // blue
                 //fputc(128+row[x].re, fp); // green
                 //fputc(128+row[x].re, fp); // red
-                printf("value is %lf + j%lf",row[x].re,row[x].im);
+                printf("value is %lf + j%lf\n",row[x].re,row[x].im);
             }
         }
         // Clean-up properly.  Videocore memory lost if not freed !
