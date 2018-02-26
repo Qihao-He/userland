@@ -134,7 +134,8 @@ int main(int argc, char *argv[]) {
             }
 
             // Setup input data
-            GPU_FFT_ROW(fft_pass[0], in,   0)[  0].re = 1;
+            GPU_FFT_ROW(fft_pass[0], in,   0)[0,  0].re = 1;
+            // GPU_FFT_ROW(fft_pass[0], in,   0)[  0].re = 1;
             // GPU_FFT_ROW(fft_pass[0], in, N-2)[N-2].re = 60;
 
             // ==> FFT() ==> T() ==> FFT() ==>
