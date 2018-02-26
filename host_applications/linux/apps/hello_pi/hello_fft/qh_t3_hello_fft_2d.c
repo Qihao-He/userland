@@ -51,6 +51,10 @@ char Usage[] =
     "RMS_C  = RMS_controller, T(1),F(0),     default 0\n"
     "BMP_C  = BMP_controller, T(1),F(0),       default 0\n";
 
+struct GPU_FFT_COMPLEX *row;
+struct GPU_FFT_TRANS *trans;
+struct GPU_FFT *fft_pass[2];
+
 unsigned Microseconds(void);
 void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR);
 void output_RMS(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base,
@@ -64,10 +68,6 @@ int main(int argc, char *argv[]) {
     double **REL_RMS_ERR;
     unsigned t[4];
     double tsq[2];
-
-    struct GPU_FFT_COMPLEX *row;
-    struct GPU_FFT_TRANS *trans;
-    struct GPU_FFT *fft_pass[2];
 
     log2_N = argc>1? atoi(argv[1]) : 12; // 8 <= log2_N <= 11
     log2_M = argc>2? atoi(argv[2]) : log2_N + 1; // 8 <= log2_N <= 11
@@ -105,14 +105,14 @@ int main(int argc, char *argv[]) {
         log2_P = log2_N + l;
         N = 1 << log2_P; // FFT length
 
+        BITMAPFILEHEADER bfh;
+        BITMAPINFOHEADER bih;
+
+        // Create Windows bitmap file
+        FILE *fp = fopen("hello_fft_2d.bmp", "wb");
+        if (!fp) return -666;
+
         if (BMP_C == 1){
-            BITMAPFILEHEADER bfh;
-            BITMAPINFOHEADER bih;
-
-            // Create Windows bitmap file
-            FILE *fp = fopen("hello_fft_2d.bmp", "wb");
-            if (!fp) return -666;
-
             // Write bitmap header
             memset(&bfh, 0, sizeof(bfh));
             bfh.bfType = 0x4D42; //"BM"
@@ -168,18 +168,11 @@ int main(int argc, char *argv[]) {
 
 
             if (RMS_C == 1){
-              output_RMS(fft, base, span_log2_N, REL_RMS_ERR, N, l, k);
+              output_RMS(fft_pass[1], base, span_log2_N, REL_RMS_ERR, N, l, k);
             }
 
             printf( "%i,%i,%d,%d,%d\n", log2_P, N, t[3] - t[2], t[2] - t[1],
             t[1] - t[0]);
-        }
-        // print output
-        for (y = 0; y < N; y ++) {
-            row = GPU_FFT_ROW(fft_pass[1], out, y);
-            for (x = 0; x < N; x ++) {
-                printf("value is %lf + j%lf\n",row[x].re,row[x].im);
-            }
         }
         // Write output to bmp file
         if (BMP_C == 1){
@@ -192,6 +185,13 @@ int main(int argc, char *argv[]) {
                 }
             }
         }
+        // // print output
+        // for (y = 0; y < N; y ++) {
+        //     row = GPU_FFT_ROW(fft_pass[1], out, y);
+        //     for (x = 0; x < N; x ++) {
+        //         printf("value is %lf + j%lf\n",row[x].re,row[x].im);
+        //     }
+        // }
         // Clean-up properly.  Videocore memory lost if not freed !
         gpu_fft_release(fft_pass[0]);
         gpu_fft_release(fft_pass[1]);
