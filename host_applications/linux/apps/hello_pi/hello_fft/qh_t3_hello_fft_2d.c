@@ -35,6 +35,7 @@ Author:Qihao He
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include <math.h>
 
 #include "gpu_fft_trans.h"
 #include "hello_fft_2d_bitmap.h"
@@ -59,6 +60,7 @@ void print_RMS(int span_log2_N, int loops, int log2_N, double **REL_RMS_ERR);
 int main(int argc, char *argv[]) {
     int x, y, l, k, ret, mb = mbox_open(), log2_N, log2_M, log2_P, span_log2_N,
      loops, N, RMS_C, BMP_C;
+     double **REL_RMS_ERR;
     unsigned t[4];
     double tsq[2];
 
