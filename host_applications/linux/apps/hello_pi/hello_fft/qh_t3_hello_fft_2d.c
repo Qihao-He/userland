@@ -41,7 +41,7 @@ Author:Qihao He
 #include "gpu_fft_trans.h"
 #include "hello_fft_2d_bitmap.h"
 
-#define GPU_FFT_ROW(fft, io, y) ((fft)->io+(fft)->step*(y))
+#define GPU_FFT_ROW(fft, io, y) ((fft) -> io + (fft) -> step * (y))
 
 char Usage[] =
     "Usage: hello_fft.bin log2_N [jobs [loops [RMS_C]]]\n"
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
 
 
             if (RMS_C == 1){
-              output_RMS(fft_pass[1], base, span_log2_N, REL_RMS_ERR, N, l, k);
+              output_RMS(fft_pass[1], row, span_log2_N, REL_RMS_ERR, N, l, k);
             }
 
             printf( "%i,%i,%d,%d,%d\n", log2_P, N, t[3] - t[2], t[2] - t[1],
@@ -217,17 +217,17 @@ void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR){
 }
 
 // output REL_RMS_ERR
-void output_RMS(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base,
+void output_RMS(struct GPU_FFT *fft_pass, struct GPU_FFT_COMPLEX *row,
   int span_log2_N, double **REL_RMS_ERR, int N, int l, int k){
-    int i, j, freq;
+    int i, j;
     double tsq[2], a;
     tsq[0] = tsq[1] = 0;
-    a = 2 * GPU_FFT_PI / N;
-    base = fft->out + fft->step;
-    for (i = 0; i < N; i++) {
-        double re = cos(a * i);
-        tsq[0] += pow(re, 2);
-        tsq[1] += pow(re - base[i].re, 2) + pow(base[i].im, 2);
+    tsq[0] = N * N;
+    for (j = 0; j < N; j ++) {
+        row = GPU_FFT_ROW(fft_pass, out, j);
+        for (i = 0; i < N; i++) {
+            tsq[1] += pow(1 - row[i].re, 2) + pow(row[i].im, 2);
+        }
     }
     REL_RMS_ERR[l][k] = sqrt(tsq[1] / tsq[0]);
 }
