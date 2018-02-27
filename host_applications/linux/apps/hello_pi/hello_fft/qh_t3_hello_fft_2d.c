@@ -69,13 +69,13 @@ int main(int argc, char *argv[]) {
     unsigned t[4];
     double tsq[2];
 
-    log2_N = argc>1? atoi(argv[1]) : 12; // 8 <= log2_N <= 11
+    log2_N = argc>1? atoi(argv[1]) : 8; // 8 <= log2_N <= 11
     log2_M = argc>2? atoi(argv[2]) : log2_N + 1; // 8 <= log2_N <= 11
     loops  = argc>3? atoi(argv[3]) : 1;  // test repetitions
     RMS_C  = argc>4? atoi(argv[4]) : 0;  // RMS_controller
     BMP_C  = argc>5? atoi(argv[5]) : 0;  // BMP_controller
     //
-    if (!(argc >=2 && argc <= 6) || loops < 1 || log2_N >= log2_M ||
+    if (!(argc >=1 && argc <= 6) || loops < 1 || log2_N >= log2_M ||
     !(log2_N >= 8 && log2_N <= 11 && log2_M <= 12) ||
     !(RMS_C >= 0 && RMS_C <= 1) || !(BMP_C >= 0 && BMP_C <= 1)){
         printf(Usage);
