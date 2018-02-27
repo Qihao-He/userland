@@ -235,7 +235,7 @@ void output_RMS(struct GPU_FFT *fft_pass, struct GPU_FFT_COMPLEX *row,
 }
 // print out REL_RMS_ERR
 void print_RMS(int span_log2_N, int loops, int log2_N, double **REL_RMS_ERR){
-    int i,j;
+    int i, j;
     for (i = 0; i < span_log2_N; i++) {
         printf("REL_RMS_ERR for log2_N:%d\n", log2_N + i);
             for (j = 0; j < loops; j++) {
