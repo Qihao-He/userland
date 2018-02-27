@@ -185,7 +185,7 @@ int main(int argc, char *argv[]) {
                 }
             }
             printf("hello_fft_2d.bmp generated. log2_N:%i,Size:%u\n", log2_P,
-             bih.biSize);
+             bfh.bfSize);
         }
         // // print output
         // for (y = 0; y < N; y ++) {
