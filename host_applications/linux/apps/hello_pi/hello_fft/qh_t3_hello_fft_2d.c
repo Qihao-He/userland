@@ -184,7 +184,7 @@ int main(int argc, char *argv[]) {
                     fputc(128 + row[x].re, fp); // red
                 }
             }
-            printf("hello_fft_2d.bmp generated. Size:\n", bih.biSize);
+            printf("hello_fft_2d.bmp generated. Size:\n", bfh.bfSize);
         }
         // // print output
         // for (y = 0; y < N; y ++) {
