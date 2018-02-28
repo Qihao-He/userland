@@ -172,7 +172,7 @@ int main(int argc, char *argv[]) {
             }
             t[5] = Microseconds();
 
-            printf( "%i,%d,%d,%d,%d\n", log2_P, t[1] - t[0], t[2] - t[1],
+            printf( "%i,%d,%d,%d,%d,%d,%d,%d\n", log2_P, t[1] - t[0], t[2] - t[1],
             t[3] - t[2], t[4] - t[3], t[5] - t[4], t[4] - t[1], t[5] - t[0]);
         }
         // Write output to bmp file
