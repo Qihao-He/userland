@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
     int x, y, i, j, k, l, ret, mb = mbox_open(), log2_N, log2_M, log2_P, span_log2_N,
      loops, N, RMS_C, BMP_C;
     double **REL_RMS_ERR;
-    unsigned t[4];
+    unsigned t[6];
     double tsq[2];
 
     log2_N = argc>1? atoi(argv[1]) : 8; // 8 <= log2_N <= 11
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
     REL_RMS_ERR_init(span_log2_N, loops, (double **)REL_RMS_ERR);
     // time_elapsed_init(span_log2_N, loops);
     // print out lables for .csv file
-    printf("log2_N,N,1st FFT_T,Transpose_T,2nd FFT_T\n");
+    printf("log2_N,init_T,1_FFT_T,Transpose_T,2_FFT_T,RMS_T,totalFFT_T,total_T\n");
 
     for(l = 0; l < span_log2_N; l++){
         log2_P = log2_N + l;
@@ -151,6 +151,7 @@ int main(int argc, char *argv[]) {
         }
 
         for (k = 0; k < loops; k++) {
+            t[0] = Microseconds();
             // Clear input array
             for (y=0; y<N; y++) {
                 row = GPU_FFT_ROW(fft_pass[0], in, y);
@@ -161,18 +162,18 @@ int main(int argc, char *argv[]) {
             GPU_FFT_ROW(fft_pass[0], in, 0)[0].re = 1;
 
             // ==> FFT() ==> T() ==> FFT() ==>
-            usleep(1); /* yield to OS */   t[0] = Microseconds();
-            gpu_fft_execute(fft_pass[0]);  t[1] = Microseconds();
-            gpu_fft_trans_execute(trans);  t[2] = Microseconds();
-            gpu_fft_execute(fft_pass[1]);  t[3] = Microseconds();
-
+            usleep(1); /* yield to OS */   t[1] = Microseconds();
+            gpu_fft_execute(fft_pass[0]);  t[2] = Microseconds();
+            gpu_fft_trans_execute(trans);  t[3] = Microseconds();
+            gpu_fft_execute(fft_pass[1]);  t[4] = Microseconds();
 
             if (RMS_C == 1){
               output_RMS(fft_pass[1], row, span_log2_N, REL_RMS_ERR, N, l, k);
             }
+            t[5] = Microseconds();
 
-            printf( "%i,%i,%d,%d,%d\n", log2_P, N, t[3] - t[2], t[2] - t[1],
-            t[1] - t[0]);
+            printf( "%i,%d,%d,%d,%d\n", log2_P, t[1] - t[0], t[2] - t[1],
+            t[3] - t[2], t[4] - t[3], t[5] - t[4], t[4] - t[1], t[5] - t[0]);
         }
         // Write output to bmp file
         if (BMP_C == 1){
