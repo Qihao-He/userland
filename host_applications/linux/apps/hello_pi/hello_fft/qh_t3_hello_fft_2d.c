@@ -218,7 +218,6 @@ void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR){
         }
     }
 }
-
 // output REL_RMS_ERR
 void output_RMS(struct GPU_FFT *fft_pass, struct GPU_FFT_COMPLEX *row,
   int span_log2_N, double **REL_RMS_ERR, int N, int l, int k){
