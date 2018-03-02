@@ -54,10 +54,10 @@ struct GPU_FFT *fft;
 
 unsigned Microseconds(void);
 void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR);
-// void time_elapsed_init(int span_log2_N, int loops);
-void input_buffer(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int N, int jobs);
-void output_RMS(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int jobs, int span_log2_N,
-  double **REL_RMS_ERR, int N, int j, int k);
+void input_buffer(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int N,
+  int jobs);
+void output_RMS(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int jobs,
+  int span_log2_N, double **REL_RMS_ERR, int N, int j, int k);
 void print_RMS(int span_log2_N, int loops, int log2_N, double **REL_RMS_ERR);
 
 int main(int argc, char *argv[]) {
@@ -66,9 +66,6 @@ int main(int argc, char *argv[]) {
     double **REL_RMS_ERR;
     unsigned t[4];
     double tsq[2];
-
-    // struct GPU_FFT_COMPLEX *base;
-    // struct GPU_FFT *fft;
 
     log2_N = argc>1? atoi(argv[1]) : 12; // 8 <= log2_N <= 22
     log2_M = argc>2? atoi(argv[2]) : log2_N + 1; // 8 <= log2_N <= 22
@@ -98,7 +95,6 @@ int main(int argc, char *argv[]) {
 
     // initializing 2D, 3D array to 0
     REL_RMS_ERR_init(span_log2_N, loops, (double **)REL_RMS_ERR);
-    // time_elapsed_init(span_log2_N, loops);
 // print out lables for .csv file
     printf("log2_N,Init_T,FFT_T,RMS_T,Total_T\n");
 
@@ -134,7 +130,7 @@ int main(int argc, char *argv[]) {
         }
         gpu_fft_release(fft); // Videocore memory lost if not freed !
     }
-    if (RMS_C ==1) print_RMS(span_log2_N, loops, log2_N, REL_RMS_ERR);
+    if (RMS_C == 1) print_RMS(span_log2_N, loops, log2_N, REL_RMS_ERR);
     return 0;
 }
 
@@ -194,15 +190,3 @@ void print_RMS(int span_log2_N, int loops, int log2_N, double **REL_RMS_ERR){
     }
     printf("\n");
 }
-//
-// void time_elapsed_init(int span_log2_N, int loops){
-//     int i,j,k;
-//     double time_elapsed[span_log2_N][loops][4]; //3D array
-//     for(i = 0; i < span_log2_N; i++){
-//         for(j = 0; j < loops; j++){
-//             for(k = 0; k < 4; k++){
-//                 time_elapsed[i][j][k] = 0;
-//             }
-//         }
-//     }
-// }

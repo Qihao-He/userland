@@ -1,2 +1,0 @@
-log2_N,N,Init_T,FFT_T,RMS_T,Total_T
-Out of memory.  Try a smaller batch or increase GPU memory.

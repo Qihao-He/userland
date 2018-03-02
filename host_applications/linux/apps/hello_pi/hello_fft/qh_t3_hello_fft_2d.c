@@ -60,11 +60,10 @@ void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR);
 void output_RMS(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base,
   int span_log2_N, double **REL_RMS_ERR, int N, int j, int k);
 void print_RMS(int span_log2_N, int loops, int log2_N, double **REL_RMS_ERR);
-// void time_elapsed_init(int span_log2_N, int loops);
 
 int main(int argc, char *argv[]) {
-    int x, y, i, j, k, l, ret, mb = mbox_open(), log2_N, log2_M, log2_P, span_log2_N,
-     loops, N, RMS_C, BMP_C;
+    int x, y, i, j, k, l, ret, mb = mbox_open(), log2_N, log2_M, log2_P,
+    span_log2_N, loops, N, RMS_C, BMP_C;
     double **REL_RMS_ERR;
     unsigned t[6];
     double tsq[2];
@@ -97,7 +96,6 @@ int main(int argc, char *argv[]) {
     }
     // initializing 2D, 3D array to 0
     REL_RMS_ERR_init(span_log2_N, loops, (double **)REL_RMS_ERR);
-    // time_elapsed_init(span_log2_N, loops);
     // print out lables for .csv file
     printf("log2_N,init_T,1_FFT_T,Transpose_T,2_FFT_T,RMS_T,totalFFT_T,total_T\n");
 
@@ -109,10 +107,11 @@ int main(int argc, char *argv[]) {
         BITMAPINFOHEADER bih;
 
         // Create Windows bitmap file
-        FILE *fp = fopen("hello_fft_2d.bmp", "wb");
-        if (!fp) return -666;
-
         if (BMP_C == 1){
+            FILE *fp = fopen("hello_fft_2d.bmp", "wb");
+            if (!fp) return -666;
+
+        // if (BMP_C == 1){
             // Write bitmap header
             memset(&bfh, 0, sizeof(bfh));
             bfh.bfType = 0x4D42; //"BM"
@@ -188,13 +187,6 @@ int main(int argc, char *argv[]) {
             printf("hello_fft_2d.bmp generated. log2_N:%i,Size:%u\n", log2_P,
              bfh.bfSize);
         }
-        // // print output
-        // for (y = 0; y < N; y ++) {
-        //     row = GPU_FFT_ROW(fft_pass[1], out, y);
-        //     for (x = 0; x < N; x ++) {
-        //         printf("value is %lf + j%lf\n",row[x].re,row[x].im);
-        //     }
-        // }
         // Clean-up properly.  Videocore memory lost if not freed !
         gpu_fft_release(fft_pass[0]);
         gpu_fft_release(fft_pass[1]);
@@ -245,15 +237,3 @@ void print_RMS(int span_log2_N, int loops, int log2_N, double **REL_RMS_ERR){
     }
     printf("\n");
 }
-//
-// void time_elapsed_init(int span_log2_N, int loops){
-//     int i,j,k;
-//     double time_elapsed[span_log2_N][loops][4]; //3D array
-//     for(i = 0; i < span_log2_N; i++){
-//         for(j = 0; j < loops; j++){
-//             for(k = 0; k < 4; k++){
-//                 time_elapsed[i][j][k] = 0;
-//             }
-//         }
-//     }
-// }
