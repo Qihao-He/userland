@@ -56,6 +56,7 @@ struct GPU_FFT_TRANS *trans;
 struct GPU_FFT *fft_pass[2];
 
 unsigned Microseconds(void);
+void RMS_malloc(int span_log2_N, int loops);
 void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR);
 void output_RMS(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base,
   int span_log2_N, double **REL_RMS_ERR, int N, int j, int k);
@@ -83,18 +84,7 @@ int main(int argc, char *argv[]) {
     }
 
     span_log2_N = log2_M - log2_N;
-    REL_RMS_ERR = (double **)malloc(span_log2_N * sizeof(double *));
-    if(REL_RMS_ERR == NULL){
-      printf("Malloc failed\n");
-      exit(-1);
-    }
-    for (i = 0; i < span_log2_N; i++){
-          REL_RMS_ERR[i] = (double *)malloc(loops * sizeof(double));
-          if(REL_RMS_ERR[i] == NULL){
-             printf("Malloc failed on loop %d",i);
-             exit(-1);
-          }
-    }
+    RMS_malloc(int span_log2_N, int loops);
     // initializing 2D, 3D array to 0
     REL_RMS_ERR_init(span_log2_N, loops, (double **)REL_RMS_ERR);
     // print out lables for .csv file
@@ -201,6 +191,21 @@ unsigned Microseconds(void) {
     struct timespec ts;
     clock_gettime(CLOCK_REALTIME, &ts);
     return ts.tv_sec*1000000 + ts.tv_nsec/1000;
+}
+
+void RMS_malloc(int span_log2_N, int loops){
+    REL_RMS_ERR = (double **)malloc(span_log2_N * sizeof(double *));
+    if(REL_RMS_ERR == NULL){
+        printf("Malloc failed\n");
+        exit(-1);
+    }
+    for (i = 0; i < span_log2_N; i++){
+        REL_RMS_ERR[i] = (double *)malloc(loops * sizeof(double));
+        if(REL_RMS_ERR[i] == NULL){
+           printf("Malloc failed on loop %d",i);
+           exit(-1);
+        }
+    }
 }
 
 void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR){

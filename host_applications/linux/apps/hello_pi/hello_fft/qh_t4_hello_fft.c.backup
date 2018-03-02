@@ -53,6 +53,7 @@ struct GPU_FFT_COMPLEX *base;
 struct GPU_FFT *fft;
 
 unsigned Microseconds(void);
+void RMS_malloc(int span_log2_N, int loops);
 void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR);
 void input_buffer(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int N,
   int jobs);
@@ -80,19 +81,7 @@ int main(int argc, char *argv[]) {
     }
 
     span_log2_N = log2_M - log2_N;
-    REL_RMS_ERR = (double **)malloc(span_log2_N * sizeof(double *));
-    if(REL_RMS_ERR == NULL){
-      printf("Malloc failed\n");
-      exit(-1);
-    }
-    for (i = 0; i < span_log2_N; i++){
-          REL_RMS_ERR[i] = (double *)malloc(loops * sizeof(double));
-          if(REL_RMS_ERR[i] == NULL){
-             printf("Malloc failed on loop %d",i);
-             exit(-1);
-          }
-    }
-
+    RMS_malloc(int span_log2_N, int loops);
     // initializing 2D, 3D array to 0
     REL_RMS_ERR_init(span_log2_N, loops, (double **)REL_RMS_ERR);
 // print out lables for .csv file
@@ -140,6 +129,21 @@ unsigned Microseconds(void) {
     return ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
 }
 
+void RMS_malloc(int span_log2_N, int loops){
+    REL_RMS_ERR = (double **)malloc(span_log2_N * sizeof(double *));
+    if(REL_RMS_ERR == NULL){
+        printf("Malloc failed\n");
+        exit(-1);
+    }
+    for (i = 0; i < span_log2_N; i++){
+        REL_RMS_ERR[i] = (double *)malloc(loops * sizeof(double));
+        if(REL_RMS_ERR[i] == NULL){
+           printf("Malloc failed on loop %d",i);
+           exit(-1);
+        }
+    }
+}
+
 void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR){
     int i, j;
     for(i = 0; i < span_log2_N; i++){
@@ -149,7 +153,8 @@ void REL_RMS_ERR_init(int span_log2_N, int loops, double **REL_RMS_ERR){
     }
 }
 // input buffer
-void input_buffer(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int N, int jobs){
+void input_buffer(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int N,
+   int jobs){
   int i, j, freq;
     for (j = 0; j < jobs; j++) {
         base = fft->in + j * fft->step;
@@ -159,8 +164,8 @@ void input_buffer(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int N, int 
     }
 }
 // output REL_RMS_ERR
-void output_RMS(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int jobs, int span_log2_N,
-  double **REL_RMS_ERR, int N, int l, int k){
+void output_RMS(struct GPU_FFT *fft, struct GPU_FFT_COMPLEX *base, int jobs,
+  int span_log2_N, double **REL_RMS_ERR, int N, int l, int k){
     int i, j, freq;
     double tsq[2], a, b;
     tsq[0] = tsq[1] = 0;
