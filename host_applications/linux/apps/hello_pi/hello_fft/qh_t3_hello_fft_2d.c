@@ -54,6 +54,7 @@ char Usage[] =
 struct GPU_FFT_COMPLEX *row;
 struct GPU_FFT_TRANS *trans;
 struct GPU_FFT *fft_pass[2];
+double **REL_RMS_ERR;
 
 unsigned Microseconds(void);
 void RMS_malloc(int span_log2_N, int loops);
@@ -65,7 +66,7 @@ void print_RMS(int span_log2_N, int loops, int log2_N, double **REL_RMS_ERR);
 int main(int argc, char *argv[]) {
     int x, y, i, j, k, l, ret, mb = mbox_open(), log2_N, log2_M, log2_P,
     span_log2_N, loops, N, RMS_C, BMP_C;
-    double **REL_RMS_ERR;
+
     FILE *fp;
     unsigned t[6];
     double tsq[2];
@@ -194,6 +195,7 @@ unsigned Microseconds(void) {
 }
 
 void RMS_malloc(int span_log2_N, int loops){
+    int i;
     REL_RMS_ERR = (double **)malloc(span_log2_N * sizeof(double *));
     if(REL_RMS_ERR == NULL){
         printf("Malloc failed\n");
