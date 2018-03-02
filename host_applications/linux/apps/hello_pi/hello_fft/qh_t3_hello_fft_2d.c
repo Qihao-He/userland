@@ -65,6 +65,7 @@ int main(int argc, char *argv[]) {
     int x, y, i, j, k, l, ret, mb = mbox_open(), log2_N, log2_M, log2_P,
     span_log2_N, loops, N, RMS_C, BMP_C;
     double **REL_RMS_ERR;
+    FILE *fp;
     unsigned t[6];
     double tsq[2];
 
