@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
     int x, y, i, j, k, l, ret, mb = mbox_open(), log2_N, log2_M, log2_P,
     span_log2_N, loops, N, RMS_C, BMP_C;
 
-    FILE *fp;
+    // FILE *fp;
     unsigned t[6];
     double tsq[2];
 
@@ -99,11 +99,11 @@ int main(int argc, char *argv[]) {
         BITMAPINFOHEADER bih;
 
         // Create Windows bitmap file
-        if (BMP_C == 1){
-            FILE *fp = fopen("hello_fft_2d.bmp", "wb");
-            if (!fp) return -666;
-
         // if (BMP_C == 1){
+        FILE *fp = fopen("hello_fft_2d.bmp", "wb");
+        if (!fp) return -666;
+
+        if (BMP_C == 1){
             // Write bitmap header
             memset(&bfh, 0, sizeof(bfh));
             bfh.bfType = 0x4D42; //"BM"
